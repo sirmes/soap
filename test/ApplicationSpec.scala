@@ -4,8 +4,9 @@ import org.specs2.mutable._
 
 import play.api.test._
 import play.api.test.Helpers._
+import play.api.test.{ FakeApplication, PlaySpecification, FakeRequest }
 
-class ApplicationSpec extends Specification {
+class ApplicationSpec extends PlaySpecification {
 
   "Application" should {
 
@@ -21,24 +22,21 @@ class ApplicationSpec extends Specification {
       contentAsString(home) must contain ("Your new application is ready.")
     }
 
-    "render the soap page" in new WithApplication{
-      //running(FakeApplication()) {
+    "render the soap endpoint" in new WithApplication{
 
-      val body = """<name>Sam</name>"""
-      val request = FakeRequest(POST, "/soap").withTextBody(body).withHeaders(ACCEPT -> "text/xml")
+      val body = <name>Sam</name>
+
+      val request = FakeRequest(POST, "/soap")
+                    .withXmlBody(body)
+
       val soapResult = route(request).get
-
 
       status(soapResult) must equalTo(OK)
 
-      println(contentType(soapResult))
-      println(contentAsString(soapResult))
-
-      contentType(soapResult) must beSome.which(_ == "text/xml")
+      contentType(soapResult) must beSome.which(_ == "application/xml")
       contentAsString(soapResult) must contain ("Hello")
 
-      //}
-
     }
+
   }
 }
