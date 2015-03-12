@@ -1,0 +1,10 @@
+
+#Good request
+curl -v --header "Content-type: text/xml" --request POST --data '<name>Sam</name>' http://localhost:9000/soap
+
+#Bad request
+#HTML content type
+curl -v --header "Content-type: text/html" --request POST --data '<name>Sam</name>' http://localhost:9000/soap
+
+#Not a well formmed xml
+curl -v --header "Content-type: text/xml" --request POST --data '<name>' http://localhost:9000/soap
